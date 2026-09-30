@@ -1,0 +1,89 @@
+{
+  "default": {
+    "requireModule": ["tsx"],
+    "require": ["src/**/*.ts"],
+    "paths": ["features/**/*.feature"],
+    "formatOptions": {
+      "theme": {
+        "tag": ["yellowBright"],
+        "feature": {
+          "keyword": ["bold", "yellow"],
+          "name": ["magenta"]
+        },
+        "scenario": {
+          "keyword": ["bold", "cyan"],
+          "name": ["magenta"]
+        },
+        "step": {
+          "keyword": ["bold", "magenta"],
+          "text": ["cyan"],
+          "argument": ["yellow"]
+        },
+        "dataTable": {
+          "border": "yellow",
+          "content": "blueBright"
+        },
+        "status": {
+          "all":      { "PASSED": ["green"], "FAILED": ["red"], "SKIPPED": ["cyan"]},
+          "icon":     { "PASSED": "✔", "FAILED": "✘", "SKIPPED": "↷" }
+        }
+      }
+    },
+    "format": ["./src/formatter/index.ts"],
+    "worldParameters": {
+      "baseUrl": "https://kayak.com",
+      "sender": "account@notify.kayak.com"
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

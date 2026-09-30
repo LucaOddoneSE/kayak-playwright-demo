@@ -1,0 +1,16 @@
+import type { Feature } from '@cucumber/messages'
+
+import { TextBuilder } from '../TextBuilder.js'
+import type { Theme } from '../types.js'
+
+export function formatFeatureTitle(
+  feature: Feature,
+  theme: Theme,
+  stream: NodeJS.WritableStream
+): string {
+  return new TextBuilder(stream)
+    .append(`${feature.keyword}:`, theme.feature?.keyword)
+    .space()
+    .append(feature.name, theme.feature?.name)
+    .build(theme.feature?.all)
+}
