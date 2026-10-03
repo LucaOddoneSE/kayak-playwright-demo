@@ -37,7 +37,8 @@ export function updateCucumberConfig(emailAddress: string = "") {
     appendFileSync(CUCUMBER_CONFIG_FILE, `${indentation}"user": "${emailAddress}"\n`);
 
     for(let index: number = lastJSONitemLineNumber+1; index < lines.length; index++)
-        appendFileSync(CUCUMBER_CONFIG_FILE, lines[index] + '\n');
+        if(lines[index].trim() !== '')
+            appendFileSync(CUCUMBER_CONFIG_FILE, lines[index] + '\n');
 }
 
 function getLineOfFirstOccurrence(pattern: string): number {

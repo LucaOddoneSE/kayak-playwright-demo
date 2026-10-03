@@ -3,7 +3,7 @@ Feature: Delete the account that was automatically created on Kayak website
   Scenario: Delete account
     Given I am on the Kayak homepage
     And I accept the cookie consent prompt
-    Then I land on Kayak English homepage
+    When I land on Kayak English homepage
     And I accept the cookie consent prompt
     And I log in with the previously generated account if it exists, otherwise I create a new one
     Then I click on account menu

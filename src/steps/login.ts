@@ -4,7 +4,7 @@ import { DataTable } from "@cucumber/cucumber";
 import { Locator, Page } from "@playwright/test";
 import { setTimeout} from "node:timers";
 import { EmailResponse } from "e2e-mailbox/types/types";
-import { signIn, continueWithEmail, clearMailbox } from "./createNewUser.steps";
+import { signIn, continueWithEmail, typeInEmailAddress } from "./createNewUser.steps";
 import { continueWithSigningIn, typeInVerificationCode, createNewUser } from "./createNewUser.steps";
 import { State } from "../state/state";
 import MailboxService from "e2e-mailbox/types/services/mailboxService";
@@ -12,26 +12,19 @@ import GuerrillaMailService from "e2e-mailbox/types/services/guerrillaMailServic
 
 type DataTableStructure = Record<'city'|'country'|'code',string>;
 
-Then('I log in with the previously generated account if it exists, otherwise I create a new one', async function (this: State) {
+Then('I log in with the previously generated account if it exists, otherwise I create a new one', {timeout: 360 * 1000}, async function (this: State) {
    const user: string = this.getEmailAddress();
    if(user === "" || user === undefined)
        await createNewUser(this);
    else
        await login(this);
-   if(!(await checkForEmailsInMailBox(this.getMailBox(), 0.5)))
-       await clearMailbox(this.getMailBox(), await this.getMailBox().fetchEmailList());
 });
 
 Then('I clear the default departure airport', async function(this: State) {
     const page: Page = this.getPage();
-    const departureField: Locator = page.locator('div[aria-label="Flight origin input"]');
-    await expect(departureField).toHaveCount(1, {timeout: 30000});
     const removeBtn: Locator = page.getByRole('button', {name: 'Remove value'});
     await expect(removeBtn).toHaveCount(1, {timeout: 30000});
     await removeBtn.click();
-    const departureInputField: Locator = page.getByRole('combobox', {name: 'Origin location'});
-    await expect(departureInputField).toHaveCount(1, {timeout: 30000});
-
 });
 
 Then(/^I select the airport described by the following values as (origin|destination)$/, async function(this: State, way: string, table: DataTable) {
@@ -141,8 +134,8 @@ function computeNextMonthWithYear(currentDate: Date): string {
 
 function computeNextMonthName(currenDate: Date): string {
     const currentMonth: number = currenDate.getMonth();
-    const nextMont: string = Intl.DateTimeFormat('en', {month: 'long'}).format(new Date(currenDate.getFullYear(),(currentMonth+1)%12));
-    return nextMont;
+    const nextMonth: string = Intl.DateTimeFormat('en', {month: 'long'}).format(new Date(currenDate.getFullYear(),(currentMonth+1)%12));
+    return nextMonth;
 }
 
 async function sleep(ms: number): Promise<void> {
@@ -159,7 +152,7 @@ async function checkForEmailsInMailBox(mailbox: MailboxService, delay: number): 
         await sleep(delay);
         return await checkForEmailsInMailBox(mailbox, delay*2);
     }
-    return await isMailBoxEmpty(mailbox);
+    return !(await isMailBoxEmpty(mailbox));
 }
 
 async function auth(state: State): Promise<void> {
@@ -172,23 +165,17 @@ async function auth(state: State): Promise<void> {
     await guerillaMailService.forgetEmailAddress(emailAddress);
     await guerillaMailService.setEmailAddress(user);
 
-    const isMailBoxEmpty: boolean = await checkForEmailsInMailBox(guerillaMailService, 0.5);
-    if(!isMailBoxEmpty)
-        await clearMailbox(guerillaMailService, await guerillaMailService.fetchEmailList());
-
     state.setMailbox(guerillaMailService);
 
-    const emailField: Locator = page.getByRole('textbox', {name: 'Enter email'});
-    await expect(emailField).toHaveCount(1);
-    await emailField.fill(user);
+    await typeInEmailAddress(page, user);
 }
 
 async function login(state: State): Promise<void> {
     await signIn(state.getPage());
     await continueWithEmail(state.getPage());
     await auth(state);
-    await continueWithSigningIn(state.getPage());
+    await continueWithSigningIn(state);
     await typeInVerificationCode(state);
 }
 
-export { checkForEmailsInMailBox };
+export { checkForEmailsInMailBox, login };

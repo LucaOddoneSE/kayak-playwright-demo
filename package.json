@@ -16,9 +16,9 @@
   "main": "index.js",
   "scripts": {
     "all": "tsx runAll.ts",
-    "create": "cucumber-js --tags='@create'",
-    "login": "cucumber-js --tags='@login'",
-    "delete": "cucumber-js --tags='@delete'"
+    "create": "cucumber-js --tags=@create",
+    "login": "cucumber-js --tags=@login",
+    "delete": "cucumber-js --tags=@delete"
   },
   "devDependencies": {
     "@types/node": "22.20.4",
