@@ -311,8 +311,8 @@ async function createNewUser(state: State): Promise<void> {
     await generateRandomEmailAddress(state);
     await continueWithSigningIn(state);
     await createAccount(page);
-    await clickOnAccountMenu(page);
     await waitForHomePageToReload(page);
+    await clickOnAccountMenu(page);
     await confirmAccount(page);
     await typeInEmailAddressForVerification(state);
     await sendConfirmationEmail(page);
