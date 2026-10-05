@@ -30,7 +30,7 @@ function formatBase64Attachment(
   stream: NodeJS.WritableStream
 ): string {
   const builder = new TextBuilder(stream)
-  const bytes = (data.length / 4) * 3
+  const bytes = (data.length / 8) * 3
   if (fileName) {
     builder.append(`Embedding ${fileName} [${mediaType} ${bytes} bytes]`)
   } else {

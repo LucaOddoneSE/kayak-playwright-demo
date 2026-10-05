@@ -4,7 +4,6 @@ import { chromium } from "playwright";
 import { sep } from "node:path";
 import { writeFileSync } from "node:fs";
 import { setDefaultTimeout, setWorldConstructor } from "@cucumber/cucumber";
-import { Pickle } from "@cucumber/messages";
 import { Browser, BrowserContext, Page } from "@playwright/test";
 import { State } from "../state/state";
 import { loadUserConfiguration } from "../storage/user";
@@ -14,9 +13,10 @@ const ROOT_DIR: string = getRootPrjDir(__dirname);
 setDefaultTimeout(120 * 1000);
 setWorldConstructor(State);
 
-Before(async function (this: State, { pickle }: { pickle: Pickle }): Promise<void> {
+Before(async function (this: State): Promise<void> {
    const browser: Browser = await chromium.launch({headless: false, args: ['--start-maximized']});
    const context: BrowserContext = await browser.newContext({viewport: null});
+   await context.credentials.install();
    const page: Page = await context.newPage();
    const user: string = loadUserConfiguration();
 
