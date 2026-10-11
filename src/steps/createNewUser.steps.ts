@@ -78,6 +78,7 @@ Then('I click on {string} button', async function(this: State, btnName: string) 
    const btn: Locator = page.getByRole('button', {name: btnName});
    await expect(btn).toHaveCount(1, {timeout: 30000});
    await btn.click();
+   await expect(btn).toHaveCount(0, {timeout: 30000});
 });
 
 Then('I click on {string} section', async function(this: State, section: string) {
