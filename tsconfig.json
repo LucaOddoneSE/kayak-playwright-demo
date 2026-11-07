@@ -3,7 +3,7 @@
     "module": "commonjs",
     "types": ["node"],
     "paths": {
-      "e2e-mailbox/types/*": ["./node_modules/e2e-mailbox/dist/lib/*"]
+      "e2e-mailbox/types/*": ["./node_modules/e2e-mailbox/lib/*"]
     },
     "outDir": "dist",
     "strict": true
