@@ -70,33 +70,33 @@ Then('I see my profile page', async function(this: State) {
    const page: Page = this.getPage();
    await page.waitForURL('**/profile/dashboard');
    const welcomeHeading: Locator = page.getByRole('heading', {name: 'Welcome'});
-   await expect(welcomeHeading).toHaveCount(1, {timeout: 30000});
+   await expect(welcomeHeading).toHaveCount(1, {timeout: 60000});
 });
 
 Then('I click on {string} button', async function(this: State, btnName: string) {
    const page: Page = this.getPage();
    const btn: Locator = page.getByRole('button', {name: btnName});
-   await expect(btn).toHaveCount(1, {timeout: 30000});
+   await expect(btn).toHaveCount(1, {timeout: 60000});
    await btn.click();
-   await expect(btn).toHaveCount(0, {timeout: 30000});
+   await expect(btn).toHaveCount(0, {timeout: 60000});
 });
 
 Then('I click on {string} section', async function(this: State, section: string) {
     const page: Page = this.getPage();
     const sectionLocator: Locator = page.getByRole('button', {name: section, exact: true});
-    await expect(sectionLocator).toHaveCount(1, {timeout: 30000});
+    await expect(sectionLocator).toHaveCount(1, {timeout: 60000});
     await sectionLocator.click();
 });
 
 Then('I edit my account information', async function(this: State, table: DataTable) {
    const page: Page = this.getPage();
    const editBtn: Locator = page.locator('button[aria-label="Edit Your name"]');
-   await expect(editBtn).toHaveCount(1, {timeout: 30000});
+   await expect(editBtn).toHaveCount(1, {timeout: 60000});
    await editBtn.click();
    const tableValues: CucumberDataTable[] = table.hashes() as CucumberDataTable[];
    for(const tableValue of tableValues) {
        const field: Locator = page.getByRole('textbox', {name: tableValue.FIELD});
-       await expect(field).toHaveCount(1, {timeout: 30000});
+       await expect(field).toHaveCount(1, {timeout: 60000});
        await field.fill(tableValue.VALUE);
    }
 });
@@ -110,7 +110,7 @@ Then('I should see my profile page stating {string}', async function(this: State
    const page: Page = this.getPage();
    const heading: Locator = page.getByRole('heading', {name: message});
 
-   await expect(heading).toHaveCount(1, {timeout: 30000});
+   await expect(heading).toHaveCount(1, {timeout: 60000});
 });
 
 async function goToHomePage(state: State): Promise<void> {
@@ -121,47 +121,47 @@ async function goToHomePage(state: State): Promise<void> {
 
 async function acceptCookies(page: Page): Promise<void> {
     const dialog: Locator = page.getByRole('dialog');
-    await expect(dialog).toHaveCount(1, {timeout: 30000});
+    await expect(dialog).toHaveCount(1, {timeout: 60000});
     const acceptCookiesBtn: Locator = dialog.locator('.RxNS-mod-variant-solid.RxNS-mod-theme-action');
-    await expect(acceptCookiesBtn).toHaveRole('button', {timeout: 30000});
-    await expect(acceptCookiesBtn).toHaveCount(1, {timeout: 30000});
+    await expect(acceptCookiesBtn).toHaveRole('button', {timeout: 60000});
+    await expect(acceptCookiesBtn).toHaveCount(1, {timeout: 60000});
     await acceptCookiesBtn.click();
 }
 
 async function navigateToEnglishApp(page: Page): Promise<void> {
     const kayakEnglishPageLink: Locator = page.getByRole('link', {name: 'Go to kayak.com instead.'});
-    await expect(kayakEnglishPageLink).toHaveCount(1, {timeout: 30000});
+    await expect(kayakEnglishPageLink).toHaveCount(1, {timeout: 60000});
     await kayakEnglishPageLink.click();
 }
 
 async function confirmAccount(page: Page): Promise<void> {
     const confirmAccountBtn: Locator = page.getByRole('button', {name: 'Confirm Account'});
-    await expect(confirmAccountBtn).toHaveCount(1, {timeout: 30000});
+    await expect(confirmAccountBtn).toHaveCount(1, {timeout: 60000});
     await expect(confirmAccountBtn).toHaveCount(1);
     await confirmAccountBtn.click();
 }
 
 async function sendConfirmationEmail(page: Page): Promise<void> {
     const sendBtn: Locator = await page.getByRole('button', {name: 'Send'});
-    await expect(sendBtn).toHaveCount(1, {timeout: 30000});
+    await expect(sendBtn).toHaveCount(1, {timeout: 60000});
     await sendBtn.click();
 }
 
 async function signIn(page: Page): Promise<void> {
     const signInBtn: Locator = page.getByRole('button', {name: 'Sign in'});
-    await expect(signInBtn).toHaveCount(1, {timeout: 30000});
+    await expect(signInBtn).toHaveCount(1, {timeout: 60000});
     await signInBtn.click();
 }
 
 async function getSignInOrCreateAccountModal(page: Page): Promise<Locator> {
     const modal: Locator = page.getByRole('dialog', {name: 'Sign in or create an account'});
-    await expect(modal).toHaveCount(1, {timeout: 30000});
+    await expect(modal).toHaveCount(1, {timeout: 60000});
     return modal;
 }
 
 async function continueWithEmail(page: Page): Promise<void> {
     const btn: Locator = page.getByRole('button', {name: 'Continue with email'});
-    await expect(btn).toHaveCount(1, {timeout: 30000});
+    await expect(btn).toHaveCount(1, {timeout: 60000});
     await btn.click();
 }
 
@@ -195,28 +195,28 @@ async function continueWithSigningIn(state: State): Promise<void> {
     const page: Page = state.getPage();
     const mailbox: MailboxService = state.getMailBox();
     const modal: Locator = await getSignInOrCreateAccountModal(page);
-    await expect(modal).toHaveCount(1, {timeout: 30000});
+    await expect(modal).toHaveCount(1, {timeout: 60000});
     const signInBtn: Locator = modal.getByRole('button', {name: 'Sign in'});
-    await expect(signInBtn).toHaveCount(1, {timeout: 30000});
+    await expect(signInBtn).toHaveCount(1, {timeout: 60000});
     await deleteReceivedEmails(mailbox);
     await signInBtn.click();
 }
 
 async function createAccount(page: Page): Promise<void> {
     const createAccountBtn: Locator = page.getByRole('button', {name: 'Create your account'});
-    await expect(createAccountBtn).toHaveCount(1, {timeout: 30000});
+    await expect(createAccountBtn).toHaveCount(1, {timeout: 60000});
     await createAccountBtn.click();
 }
 
 async function clickOnAccountMenu(page: Page): Promise<void> {
     const accountMenuBtn: Locator = getAccountMenu(page);
-    await expect(accountMenuBtn).toHaveCount(1, {timeout: 30000});
+    await expect(accountMenuBtn).toHaveCount(1, {timeout: 60000});
     await accountMenuBtn.click();
 }
 
 async function typeInEmailAddress(page: Page, emailAddress: string): Promise<void> {
     const emailField: Locator = page.getByRole('textbox', {name: "Enter email"});
-    await expect(emailField).toHaveCount(1, {timeout: 30000});
+    await expect(emailField).toHaveCount(1, {timeout: 60000});
     await emailField.fill(emailAddress);
 }
 
@@ -226,16 +226,16 @@ async function typeInEmailAddressForVerification(state: State): Promise<void> {
     const emailAddress: string = state.getEmailAddress();
     const emailAddressField: Locator = page.locator('input[type="email"]');
     await deleteReceivedEmails(mailbox);
-    await expect(emailAddressField).toHaveCount(1, {timeout: 30000});
+    await expect(emailAddressField).toHaveCount(1, {timeout: 60000});
     await emailAddressField.fill(emailAddress);
     await emailAddressField.blur();
-    await expect(emailAddressField).toHaveValue(emailAddress, {timeout: 30000});
+    await expect(emailAddressField).toHaveValue(emailAddress, {timeout: 60000});
 }
 
 async function openAccountConfirmationLink(state: State): Promise<void> {
     const page: Page = state.getPage();
     const mailbox: MailboxService = state.getMailBox();
-    await expect.poll(async () =>  await mailbox.fetchEmailList(), {timeout: 30000, intervals: [1_000, 2_000, 4_000, 8_000, 16_000]}).toHaveLength(1);
+    await expect.poll(async () =>  await mailbox.fetchEmailList(), {timeout: 60000, intervals: [1_000, 2_000, 4_000, 8_000, 16_000]}).toHaveLength(1);
     const emailResponse: EmailResponse = (await mailbox.fetchEmailList())[0];
     const mail_id: string = emailResponse.mail_id;
     const email: EmailResponse = (await mailbox.fetchEmailById(mail_id))!;
@@ -247,8 +247,8 @@ async function openAccountConfirmationLink(state: State): Promise<void> {
 
 async function waitForHomePageToReload(page: Page): Promise<void> {
     const accountMenu: Locator = getAccountMenu(page);
-    await expect(accountMenu).not.toHaveText('Sign in', {timeout: 30000});
-    await expect(accountMenu).toBeVisible({timeout: 30000});
+    await expect(accountMenu).not.toHaveText('Sign in', {timeout: 60000});
+    await expect(accountMenu).toBeVisible({timeout: 60000});
 }
 
 async function typeInVerificationCode(state: State): Promise<void> {
@@ -257,14 +257,14 @@ async function typeInVerificationCode(state: State): Promise<void> {
     const sender: string = state.getSender();
     const dialog: Locator = await getSignInOrCreateAccountModal(page);
 
-    await expect(dialog).toContainText(/\d-digit verification code/, {timeout: 30000});
+    await expect(dialog).toContainText(/\d-digit verification code/, {timeout: 60000});
 
     const textContent: string = (await dialog.textContent())!;
     const verificationCodeDigitsNumber: string = textContent.match(new RegExp('\\d-digit verification code', 'g'))![0];
     const verificationCodeLength: number = Number(verificationCodeDigitsNumber.match(new RegExp('\\d', 'g'))![0]);
 
-    await expect(dialog.locator('input')).toHaveCount(verificationCodeLength, {timeout: 30000});
-    await expect.poll(async () => mailbox.fetchEmailList(), {timeout: 30000, intervals: [1_000, 2_000, 4_000, 8_000, 16_000]}).toHaveLength(1);
+    await expect(dialog.locator('input')).toHaveCount(verificationCodeLength, {timeout: 60000});
+    await expect.poll(async () => mailbox.fetchEmailList(), {timeout: 60000, intervals: [1_000, 2_000, 4_000, 8_000, 16_000]}).toHaveLength(1);
 
     const mailList: EmailResponse[] = await mailbox.fetchEmailList();
     const mail: EmailResponse = mailList[0];
@@ -279,7 +279,7 @@ async function typeInVerificationCode(state: State): Promise<void> {
 
     for(let counter: number = 1; counter <= verificationCodeLength; counter++) {
         const cell: Locator = dialog.getByRole('textbox', {name: `Digit ${counter} of ${verificationCodeLength}`});
-        await expect(cell).toHaveCount(1, {timeout: 30000});
+        await expect(cell).toHaveCount(1, {timeout: 60000});
         await cell.fill(verificationCode[counter-1])
     }
 

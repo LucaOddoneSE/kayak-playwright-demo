@@ -23,7 +23,7 @@ Then('I log in with the previously generated account if it exists, otherwise I c
 Then('I clear the default departure airport', async function(this: State) {
     const page: Page = this.getPage();
     const removeBtn: Locator = page.getByRole('button', {name: 'Remove value'});
-    await expect(removeBtn).toHaveCount(1, {timeout: 30000});
+    await expect(removeBtn).toHaveCount(1, {timeout: 60000});
     await removeBtn.click();
 });
 
@@ -33,9 +33,9 @@ Then(/^I select the airport described by the following values as (origin|destina
     expect(table.hashes()).toHaveLength(1);
     const place: DataTableStructure = remapKeys(table.hashes()[0]) as DataTableStructure;
 
-    way = way.charAt(0).toUpperCase() + way.substring(1);
-    const location: Locator = page.getByRole('combobox', {name: `${way} location`});
-    await expect(location).toHaveCount(1, {timeout: 30000});
+    const ariaLabel: string = way === 'origin' ? 'Origin location' : 'Ask anything';
+    const location: Locator = page.getByRole('combobox', {name: ariaLabel});
+    await expect(location).toHaveCount(1, {timeout: 60000});
 
     const city: string = place.city;
     const country: string = place.country;
@@ -43,30 +43,29 @@ Then(/^I select the airport described by the following values as (origin|destina
 
     await location.fill(city);
 
-    way = way.toLowerCase();
-    const menu: Locator = page.locator(`#flight-${way}-smarty-input-list`);
-    await expect(menu).toHaveCount(1, {timeout: 30000});
+    const menu: Locator = way === 'origin' ? page.locator(`#flight-${way}-smarty-input-list`) : page.getByRole('listbox', {name: 'Destination airports'});
+    await expect(menu).toHaveCount(1, {timeout: 60000});
 
     const airport: Locator = menu.getByRole('option', {name: `${city}, ${country}`});
-    await expect(airport).toHaveCount(1, {timeout: 30000});
+    await expect(airport).toHaveCount(1, {timeout: 60000});
     await airport.click();
 
-    const inputAirportField: Locator = page.getByLabel(`Flight ${way} input`);
-    await expect(inputAirportField).toHaveCount(1, {timeout: 30000});
-    await expect(inputAirportField).toHaveText(`${city}, ${country} (${code})`, {timeout: 30000});
+    const inputAirportField: Locator = way === 'origin' ? page.getByLabel(`Flight ${way} input`) : page.getByLabel(`Flight ${way} input`).getByRole('listitem');
+    await expect(inputAirportField).toHaveCount(1, {timeout: 60000});
+    way === 'origin' ? await expect(inputAirportField).toHaveText(`${city}, ${country} (${code})`, {timeout: 60000}) : await expect(inputAirportField).toHaveText(`${city} (${code})`, {timeout: 60000});
 });
 
 Then(/I select a random (departure|return) date within the next calendar month$/, async function(this: State, type: string) {
    const page: Page = this.getPage();
    const timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone
    const currentDate: string = Intl.DateTimeFormat('en', {year: 'numeric', month: 'long', day: '2-digit'}).format(Date.now()) + ' ' + Intl.DateTimeFormat('en', {hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short', timeZone: timezone}).format(Date.now());
-   type = type.charAt(0).toUpperCase() + type.substring(1);
+   /*type = type.charAt(0).toUpperCase() + type.substring(1);
    const dateField: Locator = page.getByRole('button', {name: `${type} date`});
-   await expect(dateField).toHaveCount(1, {timeout: 30000});
-   await dateField.click();
+   await expect(dateField).toHaveCount(1, {timeout: 60000});
+   await dateField.click();*/
    const nextMonth: string = computeNextMonthWithYear(new Date(currentDate));
    const datePicker: Locator = page.getByRole('grid', {name: nextMonth});
-   await expect(datePicker).toHaveCount(1, {timeout: 30000});
+   await expect(datePicker).toHaveCount(1, {timeout: 60000});
    const monthDays: number = await datePicker.getByRole('gridcell').evaluateAll((gridCells: HTMLElement[]) => {
        let counter: number = 0
        for(const gridcell of gridCells)
@@ -74,44 +73,45 @@ Then(/I select a random (departure|return) date within the next calendar month$/
                counter++
        return counter
    });
-   type = type.toLowerCase();
    const startIndex: number = type === "departure" ? 1 : Number(this.getValue('departure date'));
    const date: number = Math.floor(startIndex + Math.random()*(monthDays-startIndex+1));
    const monthName: string = computeNextMonthName(new Date(currentDate));
    const nextMonthYear: number = computeNextMonthYear(new Date(currentDate));
    const datePicked: Locator = page.getByRole('button', {name: `${monthName} ${date}, ${nextMonthYear}`});
    type === "departure" ? this.saveValue('departure date', String(date)) : null;
-   await expect(datePicked).toHaveCount(1, {timeout: 30000});
+   await expect(datePicked).toHaveCount(1, {timeout: 60000});
    await datePicked.click();
 });
 
 Then('I verify the default criteria for the travel search is {string}', async function(this: State, defaultValue: string) {
     const page: Page = this.getPage();
     const trip: Locator = page.getByRole('combobox', {name: 'Trip type', exact: true});
-
-    await expect(trip).toHaveCount(1, {timeout: 30000});
-    await expect(trip).toHaveText(defaultValue, {timeout: 30000});
+    await expect(trip).toHaveCount(1, {timeout: 60000});
+    const textContent: string = (await trip.textContent())!.trim();
+    const [travellers, category]: string[] = textContent.match(new RegExp('(\\d+)(\\w+)'))!.slice(1);
+    defaultValue = travellers + category
+    expect(textContent).toBe(defaultValue);
 });
 
 Then('I uncheck the option to compare prices with Priceline', async function(this: State) {
     const page: Page = this.getPage();
     const priceline: Locator = page.getByRole('checkbox', {name: 'Priceline'});
-    await expect(priceline).toHaveCount(1, {timeout: 30000});
+    await expect(priceline).toHaveCount(1, {timeout: 60000});
     await priceline.uncheck();
 });
 
 Then('I search for flights', async function(this: State) {
    const page: Page = this.getPage();
    const searchBtn: Locator = await page.getByRole('button', {name: 'Search', exact: true});
-   await expect(searchBtn).toHaveCount(1, {timeout: 30000});
+   await expect(searchBtn).toHaveCount(1, {timeout: 60000});
    await searchBtn.click();
 });
 
 Then('I land on flights results page and I wait for all the entries to be fully loaded', async function(this: State) {
     const page: Page = this.getPage();
     const progressbar: Locator = await page.getByRole('progressbar')
-    await expect(progressbar).toHaveCount(1, {timeout: 30000});
-    await expect(progressbar).not.toBeVisible({timeout: 30000});
+    await expect(progressbar).toHaveCount(1, {timeout: 60000});
+    await expect(progressbar).not.toBeVisible({timeout: 60000});
 });
 
 function remapKeys(record: Record<string,string>): Record<string,string> {

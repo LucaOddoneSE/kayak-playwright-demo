@@ -1,6 +1,6 @@
 {
   "name": "kayak-playwright-sandbox",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An e2e testing sandbox for Kayak's website based on the Playwright framework",
   "keywords": [
     "cucumber",

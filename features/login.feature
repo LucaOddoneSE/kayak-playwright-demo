@@ -15,7 +15,7 @@ Feature: Log in to the Kayak website with the account that was automatically cre
       | Berlin   | Germany | BER  |
     Then I select a random departure date within the next calendar month
     Then I select a random return date within the next calendar month
-    And I verify the default criteria for the travel search is "1 adult, Economy"
+    And I verify the default criteria for the travel search is "1 Economy"
     And I uncheck the option to compare prices with Priceline
     When I search for flights
     Then I land on flights results page and I wait for all the entries to be fully loaded
